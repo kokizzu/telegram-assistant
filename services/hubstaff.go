@@ -25,8 +25,9 @@ func NewHubstaff(sessionCookie, orgID string) *Hubstaff {
 }
 
 const (
-	dayFormat = "Monday"
-	weeklyAPI = "https://app.hubstaff.com/organizations/%s/time_entries.json?filters[view]=weekly"
+	dayFormat  = "Monday"
+	timeFormat = "03:04:05 PM"
+	weeklyAPI  = "https://app.hubstaff.com/organizations/%s/time_entries.json?filters[view]=weekly"
 )
 
 type HubstaffResponse struct {
@@ -125,6 +126,53 @@ func (t *Hubstaff) renderWeeklyStats(timeEntries []TimeEntry, timeLoc *time.Loca
 	// Footer
 	tablePageView.SetFooter([]string{"", secondsToMinutes(total)})
 
+	tablePageView.Render()
+
+	return tableString.String(), nil
+}
+
+func (t *Hubstaff) DailyStats() (string, error) {
+	resp, err := t.makeAPICall()
+	if err != nil {
+		return "", err
+	}
+
+	timeLoc, err := getTimeLocation(resp.TimeZones)
+	if err != nil {
+		return "", err
+	}
+
+	return t.renderDailyStats(resp.TimeEntries, timeLoc)
+}
+
+func (t *Hubstaff) renderDailyStats(timeEntries []TimeEntry, timeLoc *time.Location) (string, error) {
+	if len(timeEntries) == 0 {
+		return "No time entries", nil
+	}
+
+	tableString := &strings.Builder{}
+
+	tablePageView := tablewriter.NewWriter(tableString)
+	tablePageView.SetBorder(false)
+	tablePageView.SetHeader([]string{"Start", "Stop", "Hours"})
+
+	var dayTotal int
+	today := time.Now().In(timeLoc)
+	for _, te := range timeEntries {
+		if te.StartTime.In(timeLoc).Day() != today.Day() {
+			continue
+		}
+
+		dayTotal += te.Tracked
+		start := te.StartTime.In(timeLoc).Format(timeFormat)
+		stop := te.StopTime.In(timeLoc).Format(timeFormat)
+		duration := secondsToMinutes(te.Tracked)
+		tablePageView.Append([]string{start, stop, duration})
+	}
+
+	// Footer
+	duration := secondsToMinutes(dayTotal)
+	tablePageView.SetFooter([]string{"", "", duration})
 	tablePageView.Render()
 
 	return tableString.String(), nil

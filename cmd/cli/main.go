@@ -22,15 +22,28 @@ func main() {
 	services := services.NewService(SA_API_KEY, SA_SITE_NAME, HUBSTAFF_SESSION, HUBSTAFF_ORG_ID)
 
 	sa := flag.Bool("sa", false, "Simple Analytics")
-	hubstaff := flag.Bool("hs", false, "Show hubstaff stats")
+	hsW := flag.Bool("hs", false, "Show hubstaff weekly stats")
+	hsD := flag.Bool("hd", false, "Show hubstaff daily stats")
 	flag.Parse()
 
 	wg := sync.WaitGroup{}
 
-	if *hubstaff {
+	if *hsW {
 		wg.Add(1)
 		go func() {
 			stats, err := services.Hubstaff.WeeklyStats()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(stats)
+			wg.Done()
+		}()
+	}
+
+	if *hsD {
+		wg.Add(1)
+		go func() {
+			stats, err := services.Hubstaff.DailyStats()
 			if err != nil {
 				log.Fatal(err)
 			}

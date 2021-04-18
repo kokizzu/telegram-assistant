@@ -9,4 +9,4 @@ run:
 	go run github.com/adityathebe/telegram-assistant/cmd/telegram
 
 install:
-	go build -i -o ~/go/bin/pa github.com/adityathebe/telegram-assistant/cmd/cli
+	go build -o ~/go/bin/pa github.com/adityathebe/telegram-assistant/cmd/cli
