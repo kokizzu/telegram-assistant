@@ -32,6 +32,7 @@ func (t *HubstaffHandler) Handlers() HandlersFunc {
 
 func (t *HubstaffHandler) hubstaffWeekly(update tgbotapi.Update) {
 	data, err := t.services.WeeklyStats()
+	data = "<pre>" + data + "</pre>"
 
 	if err != nil {
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, err.Error())

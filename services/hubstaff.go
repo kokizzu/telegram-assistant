@@ -92,7 +92,6 @@ func (t *Hubstaff) renderWeeklyStats(timeEntries []TimeEntry, timeLoc *time.Loca
 	}
 
 	tableString := &strings.Builder{}
-	tableString.WriteString("<pre>\n")
 
 	tablePageView := tablewriter.NewWriter(tableString)
 	tablePageView.SetBorder(false)
@@ -127,7 +126,6 @@ func (t *Hubstaff) renderWeeklyStats(timeEntries []TimeEntry, timeLoc *time.Loca
 	tablePageView.SetFooter([]string{"", secondsToMinutes(total)})
 
 	tablePageView.Render()
-	tableString.WriteString("</pre>")
 
 	return tableString.String(), nil
 }
