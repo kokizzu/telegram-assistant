@@ -26,7 +26,7 @@ func NewHubstaff(sessionCookie, orgID string) *Hubstaff {
 
 const (
 	dayFormat  = "Monday"
-	timeFormat = "03:04:05 PM"
+	timeFormat = "15:04:05"
 	weeklyAPI  = "https://app.hubstaff.com/organizations/%s/time_entries.json?filters[view]=weekly"
 )
 

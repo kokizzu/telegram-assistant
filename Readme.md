@@ -26,8 +26,8 @@ When I'm bored, I constantly find myself visiting simpleanalytics.com - an analy
 
 I use hubstaff at work to track my work hours. Instead of having to visit the site to see how many hours I've done in a day or in the current week, I can use the commands
 
-- `/hubstaffW`
-- `/hubstaffD`
+- `/hsw`
+- `/hsd`
 
 #### A. Daily Stats
 

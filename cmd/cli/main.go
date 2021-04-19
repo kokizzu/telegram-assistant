@@ -22,8 +22,8 @@ func main() {
 	services := services.NewService(SA_API_KEY, SA_SITE_NAME, HUBSTAFF_SESSION, HUBSTAFF_ORG_ID)
 
 	sa := flag.Bool("sa", false, "Simple Analytics")
-	hsW := flag.Bool("hs", false, "Show hubstaff weekly stats")
-	hsD := flag.Bool("hd", false, "Show hubstaff daily stats")
+	hsW := flag.Bool("hsw", false, "Show hubstaff weekly stats")
+	hsD := flag.Bool("hsd", false, "Show hubstaff daily stats")
 	flag.Parse()
 
 	wg := sync.WaitGroup{}

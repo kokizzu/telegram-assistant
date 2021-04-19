@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	HubstaffWeekly = "/hubstaffW"
-	HubstaffDaily  = "/hubstaffD"
+	HubstaffWeekly = "/hsw"
+	HubstaffDaily  = "/hsd"
 )
 
 type HandlersFunc map[string]func(tgbotapi.Update)
