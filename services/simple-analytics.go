@@ -88,7 +88,7 @@ func (t *SimpleAnalytics) callAPI(options map[string]string) (*APIResponse, erro
 
 func (t *SimpleAnalytics) DailySummary() (string, error) {
 	options := make(map[string]string)
-	options["start"] = getTime()
+	options["start"] = time.Now().Format("2006-01-02")
 
 	apiResp, err := t.callAPI(options)
 	if err != nil {
@@ -131,10 +131,4 @@ func (t *SimpleAnalytics) renderDailySummary(r *APIResponse) (string, error) {
 	tableString.WriteString("</pre>")
 
 	return tableString.String(), nil
-}
-
-// getTime returns date in format : 2021-04-04
-func getTime() string {
-	t := time.Now()
-	return fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day())
 }

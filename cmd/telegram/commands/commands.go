@@ -14,15 +14,20 @@ type Handler struct {
 	bot      *tgbotapi.BotAPI
 	services *services.Services
 	cmdMap   HandlersFunc
+
+	// ownerTGID is the telgram chat id of the owner.
+	// The bot will only respond to messages from this chat id
+	ownerTGID int
 }
 
 type HandlersFunc map[string]func(tgbotapi.Update)
 
-func NewHandler(bot *tgbotapi.BotAPI, services *services.Services) *Handler {
+func NewHandler(bot *tgbotapi.BotAPI, services *services.Services, ownerTGID int) *Handler {
 	return &Handler{
-		bot:      bot,
-		services: services,
-		cmdMap:   make(HandlersFunc),
+		bot:       bot,
+		services:  services,
+		cmdMap:    make(HandlersFunc),
+		ownerTGID: ownerTGID,
 	}
 }
 
@@ -65,7 +70,11 @@ func (t *Handler) Handle(updates tgbotapi.UpdatesChannel) {
 			continue
 		}
 
-		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+		log.Printf("[@%s] %s", update.Message.From.UserName, update.Message.Text)
+
+		if update.Message.From.ID != t.ownerTGID {
+			continue
+		}
 
 		handlerFunc := t.getHandler(update.Message.Text)
 		if handlerFunc != nil {

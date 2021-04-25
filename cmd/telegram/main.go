@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	TG_OWNER_ID      int
 	TG_API_KEY       string // Telegram API Key
 	SA_API_KEY       string // Simple Analytics API Key
 	SA_SITE_NAME     string // Simple Analytics site name
@@ -33,7 +34,7 @@ func initTelegram() {
 	}
 
 	services := services.NewService(SA_API_KEY, SA_SITE_NAME, HUBSTAFF_SESSION, HUBSTAFF_ORG_ID)
-	commandHandler := commands.NewHandler(bot, services)
+	commandHandler := commands.NewHandler(bot, services, TG_OWNER_ID)
 	if err := commandHandler.RegisterHandlers(); err != nil {
 		log.Fatal(err)
 	}

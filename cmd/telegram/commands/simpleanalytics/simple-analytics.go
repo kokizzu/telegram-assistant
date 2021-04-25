@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DailySummary = "/simpleanalytics"
+	DailySummary = "/sa"
 )
 
 type HandlersFunc map[string]func(tgbotapi.Update)
