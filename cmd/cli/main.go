@@ -31,7 +31,7 @@ func main() {
 	if *hsW {
 		wg.Add(1)
 		go func() {
-			stats, err := services.Hubstaff.WeeklyStats()
+			stats, err := services.Hubstaff.WeeklyStats(0)
 			if err != nil {
 				log.Fatal(err)
 			}

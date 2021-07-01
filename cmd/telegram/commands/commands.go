@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"log"
+	"regexp"
 
 	"github.com/adityathebe/telegram-assistant/cmd/telegram/commands/hubstaff"
 	"github.com/adityathebe/telegram-assistant/cmd/telegram/commands/simpleanalytics"
@@ -55,9 +56,9 @@ func (t *Handler) RegisterHandlers() error {
 	return nil
 }
 
-func (t *Handler) getHandler(cmd string) func(tgbotapi.Update) {
+func (t *Handler) getHandler(msg string) func(tgbotapi.Update) {
 	for k, v := range t.cmdMap {
-		if k == cmd {
+		if match, _ := regexp.MatchString(k, msg); match {
 			return v
 		}
 	}

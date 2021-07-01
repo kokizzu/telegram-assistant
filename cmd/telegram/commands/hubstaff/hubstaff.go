@@ -1,12 +1,17 @@
 package hubstaff
 
 import (
+	"log"
+	"regexp"
+	"strconv"
+	"strings"
+
 	"github.com/adityathebe/telegram-assistant/services"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 const (
-	HubstaffWeekly = "/hsw"
+	HubstaffWeekly = "^/hsw ?[0-9]*$"
 	HubstaffDaily  = "/hsd"
 )
 
@@ -33,7 +38,21 @@ func (t *HubstaffHandler) Handlers() HandlersFunc {
 }
 
 func (t *HubstaffHandler) hubstaffWeekly(update tgbotapi.Update) {
-	data, err := t.services.WeeklyStats()
+	re := regexp.MustCompile(HubstaffWeekly)
+	matches := re.FindAllString(update.Message.Text, -1)
+	var count int
+	var err error
+	if len(matches) == 1 {
+		tokens := strings.Fields(update.Message.Text)
+		if len(tokens) == 2 {
+			count, err = strconv.Atoi(tokens[1])
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	data, err := t.services.WeeklyStats(count)
 	data = "<pre>" + data + "</pre>"
 
 	if err != nil {

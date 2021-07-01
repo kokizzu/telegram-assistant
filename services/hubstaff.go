@@ -49,12 +49,23 @@ type TimeZone struct {
 	Name string `json:"name"`
 }
 
-func (t *Hubstaff) makeAPICall() (*HubstaffResponse, error) {
+func (t *Hubstaff) makeAPICall(offset int) (*HubstaffResponse, error) {
 	var result *HubstaffResponse
 
 	client := http.Client{}
 	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf(weeklyAPI, t.orgID), nil)
+
+	weekday := time.Now().Weekday() - 1
+	baseTime := time.Now().AddDate(0, 0, -int(weekday)).AddDate(0, 0, offset*-7)
+	endTime := baseTime.AddDate(0, 0, 7)
+
+	q := req.URL.Query()
+	q.Set("date", baseTime.Format("2006-01-02"))
+	q.Set("date_end", endTime.Format("2006-01-02"))
+	req.URL.RawQuery = q.Encode()
+
 	req.AddCookie(t.cookie)
+
 	response, err := client.Do(req)
 	if err != nil {
 		return result, err
@@ -67,8 +78,8 @@ func (t *Hubstaff) makeAPICall() (*HubstaffResponse, error) {
 	return result, nil
 }
 
-func (t *Hubstaff) WeeklyStats() (string, error) {
-	resp, err := t.makeAPICall()
+func (t *Hubstaff) WeeklyStats(offset int) (string, error) {
+	resp, err := t.makeAPICall(offset)
 	if err != nil {
 		return "", err
 	}
@@ -132,7 +143,7 @@ func (t *Hubstaff) renderWeeklyStats(timeEntries []TimeEntry, timeLoc *time.Loca
 }
 
 func (t *Hubstaff) DailyStats() (string, error) {
-	resp, err := t.makeAPICall()
+	resp, err := t.makeAPICall(0)
 	if err != nil {
 		return "", err
 	}
