@@ -55,7 +55,10 @@ func (t *Hubstaff) makeAPICall(offset int) (*HubstaffResponse, error) {
 	client := http.Client{}
 	req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf(weeklyAPI, t.orgID), nil)
 
-	weekday := time.Now().Weekday() - 1
+	weekday := time.Now().Weekday()
+	if weekday != time.Sunday {
+		weekday -= 1
+	}
 	baseTime := time.Now().AddDate(0, 0, -int(weekday)).AddDate(0, 0, offset*-7)
 	endTime := baseTime.AddDate(0, 0, 7)
 
@@ -65,6 +68,7 @@ func (t *Hubstaff) makeAPICall(offset int) (*HubstaffResponse, error) {
 	req.URL.RawQuery = q.Encode()
 
 	req.AddCookie(t.cookie)
+	fmt.Println(req.URL)
 
 	response, err := client.Do(req)
 	if err != nil {
