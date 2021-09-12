@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/adityathebe/telegram-assistant/cmd/telegram/commands/hubstaff"
+	"github.com/adityathebe/telegram-assistant/cmd/telegram/commands/nepsealpha"
 	"github.com/adityathebe/telegram-assistant/cmd/telegram/commands/simpleanalytics"
 	"github.com/adityathebe/telegram-assistant/services"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -50,6 +51,11 @@ func (t *Handler) RegisterHandlers() error {
 
 	sa := simpleanalytics.NewHandler(t.bot, t.services.SimpleAnalytics)
 	if err := t.registerHandler(HandlersFunc(sa.Handlers())); err != nil {
+		return err
+	}
+
+	na := nepsealpha.NewHandler(t.bot, t.services.NepseAlpha)
+	if err := t.registerHandler(HandlersFunc(na.Handlers())); err != nil {
 		return err
 	}
 

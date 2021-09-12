@@ -15,6 +15,8 @@ var (
 	SA_SITE_NAME     string // Simple Analytics site name
 	HUBSTAFF_SESSION string // Hubstaff session cookie
 	HUBSTAFF_ORG_ID  string // Hubstaff organization id
+	NA_COOKIE        string
+	NA_HOLDER_ID     string
 )
 
 func initTelegram() {
@@ -33,7 +35,7 @@ func initTelegram() {
 		log.Fatal(err)
 	}
 
-	services := services.NewService(SA_API_KEY, SA_SITE_NAME, HUBSTAFF_SESSION, HUBSTAFF_ORG_ID)
+	services := services.NewService(SA_API_KEY, SA_SITE_NAME, HUBSTAFF_SESSION, HUBSTAFF_ORG_ID, NA_COOKIE, NA_HOLDER_ID)
 	commandHandler := commands.NewHandler(bot, services, TG_OWNER_ID)
 	if err := commandHandler.RegisterHandlers(); err != nil {
 		log.Fatal(err)

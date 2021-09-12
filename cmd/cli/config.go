@@ -24,4 +24,14 @@ func readKeys() {
 	if !ok {
 		panic("Hubstaff organization id is required.")
 	}
+
+	NA_COOKIE, ok = os.LookupEnv("NA_COOKIE")
+	if !ok {
+		panic("Nepse Alpha Cookie is required.")
+	}
+
+	NA_HOLDER_ID, ok = os.LookupEnv("NA_HOLDER_ID")
+	if !ok {
+		panic("Nepse Alpha Portfolio Hodler ID is required.")
+	}
 }
